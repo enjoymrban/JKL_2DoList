@@ -1,0 +1,25 @@
+{
+  "name": "jkl_2dolist",
+  "version": "1.0.0",
+  "description": "A simple ToDo List with Nodejs for a progressive webapp.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enjoymrban/JKL_2DoList.git"
+  },
+  "author": "Silvio Jäger, Jann Lemm, Silvan Knecht",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/enjoymrban/JKL_2DoList/issues"
+  },
+  "homepage": "https://github.com/enjoymrban/JKL_2DoList#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "joi": "^13.6.0"
+  }
+}
