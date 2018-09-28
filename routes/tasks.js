@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 let task = require('../models/task');
-let task1 = new task('test1','0');
-let task2 = new task('test2','1');
+let task1 = new task('test1',false);
+let task2 = new task('test2',true);
 
 
 const tasks = [task1, task2];
@@ -11,7 +11,7 @@ const tasks = [task1, task2];
 function validateTask(task) {
     const schema = {
         discription: Joi.string().min(3).required(),
-        status: Joi.number().integer().min(0).max(1)
+        isDone: Joi.boolean().required()
     };
     return Joi.validate(task, schema);
 }
@@ -19,20 +19,25 @@ function validateTask(task) {
 
 router.get('/', (req, res) => {
     let taskFiltered = [];
-    const status = req.query.status;
-    for(const t of tasks){
-        if(status == t.status){
-            taskFiltered.push(t);
+    const isDone = req.query.isDone;
+    if (isDone != undefined) {
+
+        for (const t of tasks) {
+            if (isDone == t.isDone) {
+                taskFiltered.push(t);
+            }
         }
-    }    
-    res.send(taskFiltered);
+        res.send(taskFiltered);
+    } else {
+        res.send(tasks);
+    }
 });
 
 
 
 router.get('/:id', (req, res) => {
     const task = tasks.find(g => g.id === parseInt(req.params.id));
-    if (!task) return res.status(404).send('The Task with the given id was not found'); //404        
+    if (!task) return res.isDone(404).send('The Task with the given id was not found'); //404        
 
     res.send(task);
 
@@ -43,7 +48,7 @@ router.post('/', (req, res) => {
         error
     } = validateTask(req.body); // const {error} equals result.error --> Object destructering
     if (error) return res.status(400).send(error.details[0].message);
-    let taskToPush = new task(req.body.discription, req.body.status)
+    let taskToPush = new task(req.body.discription, req.body.isDone)
     tasks.push(taskToPush);
     res.send(taskToPush);
 
@@ -58,7 +63,8 @@ router.put('/:id', (req, res) => {
     } = validateTask(req.body); // result.error --> Object destructering
     if (error) return res.status(400).send(error.details[0].message);
 
-    task.name = req.body.name;
+    task.discription = req.body.discription;
+    task.isDone = req.body.isDone
     res.send(task);
 });
 

@@ -1,0 +1,4 @@
+/* removes width: 100% from bootstrap */
+.form-control{
+    width: auto;
+}
