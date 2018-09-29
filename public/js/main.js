@@ -79,8 +79,8 @@ $(function () {
                 let newTask = taskTemplate(data);
                 appendToDo(newTask, data);
             },
-            error: function (jqXhr, textStatus, error) {
-               console.log("Fehler bei post");
+            error: function (request, textStatus, error,) {
+                console.log(request.responseText);
             }
         });
         $('#taskDescription').val('');

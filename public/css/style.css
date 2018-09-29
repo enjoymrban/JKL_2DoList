@@ -5,6 +5,7 @@
 .container{
     width: 100%;
 }
-/* input{
-    box-sizing: border-box;
-} */
+
+.listcontainer{
+    min-width: 350px;
+}

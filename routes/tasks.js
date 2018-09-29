@@ -21,7 +21,6 @@ function validateTask(task) {
 router.get('/', (req, res) => {
     let taskFiltered = [];
     let isDone = req.query.isDone;
-    console.log(isDone);
     if (isDone != undefined) {
         isDone = (req.query.isDone === 'true');
         for (const t of tasks) {
@@ -29,7 +28,6 @@ router.get('/', (req, res) => {
                 taskFiltered.push(t);
             }
         }
-        console.log(taskFiltered);
         res.send(taskFiltered);
     } else {
         res.send(tasks);
