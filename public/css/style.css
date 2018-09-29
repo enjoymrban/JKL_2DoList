@@ -1,4 +1,10 @@
 /* removes width: 100% from bootstrap */
 .form-control{
-    width: auto;
+    width: 100%;
 }
+.container{
+    width: 100%;
+}
+/* input{
+    box-sizing: border-box;
+} */
