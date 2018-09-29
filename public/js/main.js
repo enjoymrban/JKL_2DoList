@@ -85,8 +85,6 @@ $(function () {
         });
     });
 
-    
-
     $('#showDoneC').change(() => {
         if ($('#showDoneC').is(":checked")) {
             console.log("showDone");
