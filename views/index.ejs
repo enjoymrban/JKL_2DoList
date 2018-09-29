@@ -46,10 +46,14 @@
                 </div>
                 <form id="createTaskF" onsubmit="return false">
                     <div class="form-row">
-                        <input type="text" class="form-control" id="taskDescription" placeholder="Add a to-do...">
+                        <input maxlength="64" minlength="3" type="text" class="form-control" id="taskDescription" placeholder="Add a to-do..." autocomplete="off">
                     </div>
                 </form>
             </div>
+
+        </div>
+
+        <div class="row justify-content-center">
             <div class="listcontainer col-6" id="doneContainer" style="display:none">
                 <h2>Done</h2>
                 <div class="done">
