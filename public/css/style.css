@@ -69,5 +69,7 @@ body {
 
 [id^="deleteIcon"] {
     float: right;
+    cursor: pointer;
 
 }
+

@@ -25,6 +25,9 @@ $(function () {
             }
 
         });
+        $('#deleteIcon'+value.id).click(()=>{
+            deleteTask(value.id);
+        });
     }
 
     function appendDone(newTask, value) {
@@ -36,6 +39,9 @@ $(function () {
                 updateTask(value);
             }
 
+        });
+        $('#deleteIcon'+value.id).click(()=>{
+            deleteTask(value.id);
         });
     }
 
@@ -64,6 +70,21 @@ $(function () {
             }
         });
 
+    }
+
+    function deleteTask(id){
+        $.ajax({
+            url: "api/tasks/"+id,
+            type: "DELETE",
+            dataType: "json",
+            success: function (data){
+                $('#taskDiv'+data.id).remove();
+            },
+            error: function(errorThrown){
+                console.log(errorThrown);
+            }
+       
+        });
     }
 
     // Actionlistener to creat a new Task
