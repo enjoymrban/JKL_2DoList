@@ -79,10 +79,11 @@ $(function () {
                 let newTask = taskTemplate(data);
                 appendToDo(newTask, data);
             },
-            error: function (jqXhr, textStatus, errorThrown) {
-                console.log(errorThrown);
+            error: function (jqXhr, textStatus, error) {
+               console.log("Fehler bei post");
             }
         });
+        $('#taskDescription').val('');
     });
 
     $('#showDoneC').change(() => {
@@ -104,3 +105,4 @@ $(function () {
 
 
 });
+
