@@ -85,6 +85,7 @@ $(function () {
         });
     });
 
+    
 
     $('#showDoneC').change(() => {
         if ($('#showDoneC').is(":checked")) {
