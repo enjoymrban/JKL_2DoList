@@ -1,57 +1,73 @@
-html{
+html {
     height: 100%;
     width: 100%;
 }
 
-body{
-    height:100%;
+body {
+    height: 100%;
     width: 100%;
 
-    background: #2980B9;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    
-    
-    background: #7F7FD5;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    
-    
-    background: #0F2027;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    
+    background: #2980B9;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+    background: #7F7FD5;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+    background: #0F2027;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #2C5364, #203A43, #0F2027);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 
 }
+
 /* overrides backgroundcolor from bootstarp */
 .bg-light {
     background-color: #d9eafc !important;
 }
 
-.container{
+.container {
     width: 100%;
 }
 
-.listcontainer{
-    min-width: 350px; 
+.listcontainer {
+    min-width: 350px;
     border-radius: 20px;
-    background-color:#d9eafc;
-    margin-top:5%;
+    background-color: #d9eafc;
+    margin-top: 5%;
     padding-bottom: 10px;
 }
 
-.listcontainer h2{
+.listcontainer h2 {
     text-align: center;
     text-decoration: underline;
 
-  
-}
-.task{
-        border-radius: 10px;
-        padding-left: 30px;
-        margin-bottom: 5px;
+
 }
 
-.task:hover{
+.task {
+    border-radius: 10px;
+    padding-left: 30px;
+    margin-bottom: 5px;
+}
+
+.task:hover {
     background-color: #bdddff;
+}
+
+[id^="deleteIcon"] {
+    float: right;
+
 }

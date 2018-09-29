@@ -79,7 +79,7 @@ $(function () {
                 let newTask = taskTemplate(data);
                 appendToDo(newTask, data);
             },
-            error: function (request, textStatus, error,) {
+            error: function (request, textStatus, error) {
                 console.log(request.responseText);
             }
         });
@@ -98,7 +98,7 @@ $(function () {
 
 
     function taskTemplate(value){
-        let newTask = "<div class='task form-check' id='taskDiv" + value.id + "'><input class='form-check-input' type='checkbox' id='task" + value.id + "'><label class='form-check-label' for='task" + value.id + "' id='taskLabel" + value.id + "'>" + value.discription + "</label></div>";
+        let newTask = "<div class='task form-check' id='taskDiv" + value.id + "'><input class='form-check-input' type='checkbox' id='task" + value.id + "'><label class='form-check-label' for='' id='taskLabel" + value.id + "'>" + value.discription + "</label><i id='deleteIcon"+value.id+"' class='material-icons'>delete</i></div>";
         return newTask;
     }
 
