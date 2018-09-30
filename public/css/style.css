@@ -6,6 +6,7 @@ html {
 body {
     height: 100%;
     width: 100%;
+    font-family: "Helvetica";
 
     background: #2980B9;
     /* fallback for old browsers */
@@ -46,6 +47,7 @@ body {
     min-width: 350px;
     border-radius: 20px;
     background-color: #d9eafc;
+    box-shadow: 5px 5px 5px whitesmoke;
     margin-top: 5%;
     padding-bottom: 10px;
 }
