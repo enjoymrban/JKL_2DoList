@@ -11,7 +11,7 @@ const tasks = [task1, task2];
 // validation for post and put
 function validateTask(task) {
     const schema = {
-        discription: Joi.string().min(3).max(64).required(),
+        discription: Joi.string().min(3).max(30).required(),
         isDone: Joi.boolean().required()
     };
     return Joi.validate(task, schema);
