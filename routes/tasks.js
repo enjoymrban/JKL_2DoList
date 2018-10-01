@@ -11,13 +11,13 @@ const tasks = [task1, task2];
 // validation for post and put
 function validateTask(task) {
     const schema = {
-        discription: Joi.string().min(3).max(30).required(),
+        description: Joi.string().min(3).max(30).required(),
         isDone: Joi.boolean().required()
     };
     return Joi.validate(task, schema);
 }
 
-// 'api/tasks' for all tasks 'api/tasks?isDone=true' filter to gett all done or all todo 
+// 'api/tasks' for all tasks 'api/tasks?isDone=true bszw false' filter to gett all done or all todo 
 router.get('/', (req, res) => {
     let taskFiltered = [];
     let isDone = req.query.isDone;
@@ -51,7 +51,7 @@ router.post('/', (req, res) => {
         error
     } = validateTask(req.body); // const {error} equals result.error --> Object destructering
     if (error) return res.status(400).send(error.details[0].message);
-    let taskToPush = new task(req.body.discription, req.body.isDone)
+    let taskToPush = new task(req.body.description, req.body.isDone)
     tasks.push(taskToPush);
     res.send(taskToPush);
 
@@ -67,7 +67,7 @@ router.put('/:id', (req, res) => {
     } = validateTask(req.body); // const {error} equals result.error --> Object destructering
     if (error) return res.status(400).send(error.details[0].message);
 
-    task.discription = req.body.discription;
+    task.description = req.body.description;
     task.isDone = req.body.isDone
     res.send(task);
 });

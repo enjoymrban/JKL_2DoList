@@ -1,9 +1,9 @@
 let id = 0;
 
 class task {
-    constructor(discription, isDone) {
+    constructor(description, isDone) {
         this.id = id;
-        this.discription = discription;        
+        this.description = description;        
         this.isDone = isDone; 
         id++;
     }

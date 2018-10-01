@@ -1,6 +1,5 @@
 $(function () {
 
-
     $.ajax({
         url: "api/tasks",
         type: "GET",
@@ -25,7 +24,7 @@ $(function () {
             }
 
         });
-        $('#deleteIcon'+value.id).click(()=>{
+        $('#deleteIcon' + value.id).click(() => {
             deleteTask(value.id);
         });
     }
@@ -40,7 +39,7 @@ $(function () {
             }
 
         });
-        $('#deleteIcon'+value.id).click(()=>{
+        $('#deleteIcon' + value.id).click(() => {
             deleteTask(value.id);
         });
     }
@@ -52,7 +51,7 @@ $(function () {
             dataType: 'json',
             type: 'put',
             contentType: 'application/json',
-            data: JSON.stringify({ "discription": value.discription, "isDone": !value.isDone }),
+            data: JSON.stringify({ "description": value.description, "isDone": !value.isDone }),
             processData: false,
             success: function (data, textStatus, jQxhr) {
                 let newTask = taskTemplate(data);
@@ -60,7 +59,7 @@ $(function () {
                 if (data.isDone) {
                     appendDone(newTask, data);
                 } else {
-                
+
                     appendToDo(newTask, data);
                 }
                 // location.reload();
@@ -72,18 +71,18 @@ $(function () {
 
     }
 
-    function deleteTask(id){
+    function deleteTask(id) {
         $.ajax({
-            url: "api/tasks/"+id,
+            url: "api/tasks/" + id,
             type: "DELETE",
             dataType: "json",
-            success: function (data){
-                $('#taskDiv'+data.id).remove();
+            success: function (data) {
+                $('#taskDiv' + data.id).remove();
             },
-            error: function(errorThrown){
+            error: function (errorThrown) {
                 console.log(errorThrown);
             }
-       
+
         });
     }
 
@@ -94,7 +93,7 @@ $(function () {
             dataType: 'json',
             type: 'post',
             contentType: 'application/json',
-            data: JSON.stringify({ "discription": $('#taskDescription').val(), "isDone": false }),
+            data: JSON.stringify({ "description": $('#taskDescription').val(), "isDone": false }),
             processData: false,
             success: function (data, textStatus, jQxhr) {
                 let newTask = taskTemplate(data);
@@ -118,12 +117,22 @@ $(function () {
     });
 
 
-    function taskTemplate(value){
-        let newTask = "<div class='task form-check' id='taskDiv" + value.id + "'><input class='form-check-input' type='checkbox' id='task" + value.id + "'><label class='form-check-label' for='' id='taskLabel" + value.id + "'>" + value.discription + "</label><i id='deleteIcon"+value.id+"' class='material-icons'>delete</i></div>";
+    function taskTemplate(value) {
+        let newTask =
+            `<div class="task form-check" id="taskDiv${value.id}">
+                <div class="pretty p-icon p-jelly p-round">
+                    <input type="checkbox" id="task${value.id}">
+                        <div class="state p-info taskSettings">
+                            <i class="icon material-icons">done</i>
+                            <label id="taskLabel${value.id}">${value.description}</label>            
+                        </div>
+                </div> 
+                <div class="taskSettings">
+                    <i id="deleteIcon${value.id}" class='material-icons'>delete</i>
+                </div>
+            </div>`;
         return newTask;
     }
-
-
 
 });
 
