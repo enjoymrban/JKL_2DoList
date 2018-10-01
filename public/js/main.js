@@ -120,12 +120,12 @@ $(function () {
     function taskTemplate(value) {
         let newTask =
             `<div class="task form-check" id="taskDiv${value.id}">
-                <div class="pretty p-icon p-jelly p-round">
+                <div class="pretty p-icon p-jelly p-round ">
                     <input type="checkbox" id="task${value.id}">
-                        <div class="state p-info taskSettings">
-                            <i class="icon material-icons">done</i>
-                            <label id="taskLabel${value.id}">${value.description}</label>            
-                        </div>
+                    <div class="state p-info taskSettings">
+                        <i class="icon material-icons">done</i>
+                        <label id="taskLabel${value.id}">${value.description}</label>            
+                    </div>
                 </div> 
                 <div class="taskSettings">
                     <i id="deleteIcon${value.id}" class='material-icons'>delete</i>
