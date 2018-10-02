@@ -82,3 +82,8 @@ body {
     float: right;
 }
 
+/* This needs to be fixed otherwise! Writting isn't in the middle of the div!*/
+.maginFix {
+    margin-top: 5px;
+    margin-bottom: -2px;
+}
