@@ -6,6 +6,8 @@ $(function () {
         type: "GET",
         dataType: "json"
     }).done((json) => {
+        // Prints a table with all tasks to the console
+        console.table(json);
         $.each(json, (key, value) => {
             const {isDone} = value;
             let newTask = taskTemplate(value);
@@ -14,7 +16,7 @@ $(function () {
             } else {
                 appendToDo(newTask, value);
             }
-            console.log(value);
+
         });
     });
 
@@ -91,7 +93,8 @@ $(function () {
             type: "DELETE",
             dataType: "json",
             success: function (data) {
-                $('#taskDiv' + data.id).remove();
+                const {id} = data;
+                $('#taskDiv' + id).remove();
             },
             error: function (errorThrown) {
                 console.log(errorThrown);
