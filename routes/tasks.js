@@ -51,7 +51,7 @@ router.post('/', (req, res) => {
         error
     } = validateTask(req.body); // const {error} equals result.error --> Object destructering
     if (error) return res.status(400).send(error.details[0].message);
-    let taskToPush = new task(req.body.description, req.body.isDone)
+    let taskToPush = new task(req.body.description, req.body.isDone);
     tasks.push(taskToPush);
     res.send(taskToPush);
 
@@ -68,7 +68,7 @@ router.put('/:id', (req, res) => {
     if (error) return res.status(400).send(error.details[0].message);
 
     task.description = req.body.description;
-    task.isDone = req.body.isDone
+    task.isDone = req.body.isDone;
     res.send(task);
 });
 
