@@ -19,9 +19,6 @@ $(function () {
 
         });
     });
-
-    
-
 });
 
 // Appends all sorted ToDos to the .todo Div
