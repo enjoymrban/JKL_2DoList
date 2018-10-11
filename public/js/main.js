@@ -32,7 +32,7 @@ function appendToDo(newTask, value) {
     // Checks when the checkbox is changed and updates the task --> sends it to Done
     $('#task' + id).change(() => {
         if ($('#task' + id).is(":checked")) {
-            updateTask(value);
+            changeTaskIsDone(value);
         }
     });
 
@@ -52,7 +52,7 @@ function appendDone(newTask, value) {
     // Checks when the checkbox is changed and updates the task --> sends it to ToDo
     $('#task' + id).change(() => {
         if (!$('#task' + id).is(":checked")) {
-            updateTask(value);
+            changeTaskIsDone(value);
         }
     });
 
@@ -64,7 +64,7 @@ function appendDone(newTask, value) {
 
 
 // Updates the task, removes it from its current list and appends it to the new list
-function updateTask(value) {
+function changeTaskIsDone(value) {
     const {id, description, isDone} = value;
     $.ajax({
         url: 'api/tasks/' + id,
