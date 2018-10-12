@@ -54,11 +54,11 @@ function taskTemplate(value) {
     } = value;
     let newTask =
         `<div class="task form-check" id="taskDiv${id}">
-            <div class="pretty p-icon p-jelly p-round maginFix">
+            <div class="pretty p-icon p-jelly p-round marginFix">
                 <input type="checkbox" id="task${id}">
                 <div class="state p-info taskSettings">
                     <i class="icon material-icons">done</i>
-                    <label id="taskLabel${id}">${description}</label>
+                    <div id="taskLabel${id}">${description}</div>
                 </div>
             </div>
             <div class="taskSettings">
