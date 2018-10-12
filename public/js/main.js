@@ -58,7 +58,7 @@ function taskTemplate(value) {
                 <input type="checkbox" id="task${id}">
                 <div class="state p-info taskSettings">
                     <i class="icon material-icons">done</i>
-                    <div id="taskLabel${id}">${description}</div>
+                    <label id="taskLabel${id}">${description}</label>
                 </div>
             </div>
             <div class="taskSettings">
