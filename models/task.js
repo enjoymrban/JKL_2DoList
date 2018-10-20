@@ -1,10 +1,10 @@
 let id = 0;
 
 class task {
-    constructor(description, isDone) {
+    constructor(description, category) {
         this.id = id;
-        this.description = description;        
-        this.isDone = isDone; 
+        this.description = description;
+        this.category = category;
         id++;
     }
 }
