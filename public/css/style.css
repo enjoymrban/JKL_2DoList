@@ -7,7 +7,7 @@ html {
 body {
     height: 100%;
     width: 100%;
-    font-family: "Helvetica";
+ 
 
     background: #0F2027;
     /* fallback for old browsers */
@@ -40,8 +40,11 @@ body {
 
 .listcontainer h2 {
     text-align: center;
-    text-decoration: underline;
-    font-family: Lobster;
+
+}
+
+ul.todo, ul.done{
+    padding-left: 0;
 }
 
 .form-check{

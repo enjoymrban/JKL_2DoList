@@ -54,7 +54,7 @@ function taskTemplate(value) {
         description
     } = value;
     let newTask =
-        `<div class="task form-check" id="taskDiv${id}">
+        `<li class="task form-check" id="taskDiv${id}">
             <div class="pretty p-icon p-jelly p-round marginFix">
                 <input type="checkbox" id="task${id}">
                 <div class="state p-info taskSettings">
@@ -65,7 +65,7 @@ function taskTemplate(value) {
             <div class="taskSettings">
                 <i id="deleteIcon${id}" class='material-icons'>delete</i>
             </div>
-        </div>`;
+        </li>`;
     return newTask;
 }
 
