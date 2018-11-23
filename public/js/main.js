@@ -19,10 +19,10 @@ function appendTask(value) {
     let newTask = taskTemplate(value);
     const {
         id,
-        isDone
+        category
     } = value;
     let divClass = "";
-    if (isDone) {
+    if (category == "done") {
         divClass = ".done";
         $(divClass).append(newTask);
         $('#taskLabel' + id).css("text-decoration", "line-through");
@@ -36,7 +36,8 @@ function appendTask(value) {
 
     // Checks when the checkbox is changed and updates the task --> sends it to ToDo
     $('#task' + id).change(() => {
-        changeTaskIsDone(value);
+        let category = $('#taskDiv'+id).parent().prop('className');
+        changeTaskIsDone(value, category);
 
     });
 
@@ -53,7 +54,7 @@ function taskTemplate(value) {
         description
     } = value;
     let newTask =
-        `<div class="task form-check" id="taskDiv${id}">
+        `<li class="task form-check" id="taskDiv${id}">
             <div class="pretty p-icon p-jelly p-round marginFix">
                 <input type="checkbox" id="task${id}">
                 <div class="state p-info taskSettings">
@@ -64,17 +65,24 @@ function taskTemplate(value) {
             <div class="taskSettings">
                 <i id="deleteIcon${id}" class='material-icons'>delete</i>
             </div>
-        </div>`;
+        </li>`;
     return newTask;
 }
 
 // Updates the task, removes it from its current list and appends it to the new list
-function changeTaskIsDone(value) {
+function changeTaskIsDone(value, category) {
     const {
         id,
-        description,
-        isDone
+        description
     } = value;
+
+    switch(category){
+        case "todo": value.category = "done";
+        break;
+        case "done": value.category = "todo";
+        break;
+    }
+
 
     $.ajax({
         url: 'api/tasks/' + id,
@@ -83,15 +91,15 @@ function changeTaskIsDone(value) {
         contentType: 'application/json',
         data: JSON.stringify({
             "description": description,
-            "isDone": !isDone
-        }), //isDone gets inverted in every update, maybe change this!
+            "category": value.category
+        }),
         processData: false,
         success: function (data, textStatus, jQxhr) {
             const {
                 id
             } = data;
             $('#taskDiv' + id).remove();
-            appendTask(data);
+            appendTask(value);
 
         },
         error: function (jqXhr, textStatus, errorThrown) {
@@ -127,7 +135,7 @@ $('#createTaskF').submit(() => {
         contentType: 'application/json',
         data: JSON.stringify({
             "description": $('#taskDescription').val(),
-            "isDone": false
+            "category": "todo"
         }),
         processData: false,
         success: function (data, textStatus, jQxhr) {
