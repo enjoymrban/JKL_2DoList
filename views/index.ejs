@@ -46,7 +46,6 @@
             <div class="listcontainer col-6">
                 <h2>ToDo</h2>
                 <div class="todo">
-                   
                 </div>
                 <form id="createTaskF" onsubmit="return false">
                     <div class="form-row">
@@ -67,7 +66,18 @@
         </div>
     </div>
 
-
+    <script>
+        //Register the service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then((registration) => {
+                // Registration was successful
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }).catch((err) => {
+                // registration faild: 
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        }
+    </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
