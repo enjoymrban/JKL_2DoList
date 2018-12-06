@@ -1,0 +1,20 @@
+{
+    "name": "JKL 2DoList",
+    "short_name": "2DoList",
+    "start_url": "/",
+    "display": "fullscreen",
+    "theme_color": "#FFFFFF",
+    "background_color": "#203A43",
+    "icons": [
+        {
+        "src": "./images/homescreen.png",
+        "sizes": "192x192",
+        "type": "image/png"
+        },
+        {
+        "src": "./images/homescreen-144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+        }
+        ]
+       }

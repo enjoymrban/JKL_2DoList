@@ -68,35 +68,22 @@
     </div>
 
 
+    <p>You're offline</p>
 
-    <script src="./js/idb-keyval.js"></script>
+
+
+
     <script>
         //Register the service worker
-        if ('serviceWorker' in navigator && 'SyncManager' in window) {
-            navigator.serviceWorker.register('sw.js').then(registration => navigator.serviceWorker.ready)
-                .then(registration => {
-                    console.log(registration);
-                    document.getElementById('createTaskF').addEventListener('submit', () => {
-                        registration.sync.register('newTask').then(() => {
-                            let payload = {
-                                "description": document.getElementById('taskDescription').value,
-                                "category": "todo"
-                            };
-                            //idbKeyval.set('sendTask', payload);
-                        });
-                    });
-
-
-                }).catch((err) => {
-                    // registration faild: 
-                    console.log('ServiceWorker registration failed: ', err);
-                });
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then((registration) => {
+                // Registration was successful
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }).catch((err) => {
+                // registration faild: 
+                console.log('ServiceWorker registration failed: ', err);
+            });
         }
-
-
-
-
-
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

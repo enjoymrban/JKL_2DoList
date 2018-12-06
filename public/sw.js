@@ -2,18 +2,25 @@
 importScripts('./js/idb-keyval.js');
 
 const cacheName = 'todoList';
-const offlineUrl = '/offline';
+const offlineUrl = '/index-offline.html';
 
 // Cache our known resources during install
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(cacheName)
-    .then(cache => cache.addAll([
-      './',
-      './css/style.css',
-      './js/idb-keyval.js',
-      './js/main.js'
-    ]))
+      .then(cache => cache.addAll([
+        //'./',
+        offlineUrl,
+        //'/api/tasks',
+        './css/style.css',
+        './js/idb-keyval.js',
+        './js/main.js',
+
+        'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js',
+        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js',
+        'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
+      ]))
   );
 });
 
@@ -29,17 +36,86 @@ function timeout(delay) {
   });
 }
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
 
+
+  // Intercepting networkrequests
+  // dont' load google fonts and icons if save-data header is on. In GET Request of the Localhost!
+  if (event.request.headers.get('save-data')) {
+    if (event.request.url.includes('fonts.googleapis.com')) {
+      event.respondWith(new Response('', { status: 417, statusText: 'Ignore fonts to save data' }));
+    }
+  }
+  // Exampel for Service Worker to the rescue. To avoid Single Point of Failure
   // Check for the googleapis domain
-  if (/googleapis/.test(event.request.url)) {
+  if (/abcd/.test(event.request.url)) {
     return event.respondWith(
-        Promise.race([
-        timeout(500),
+      Promise.race([
+        timeout(300),
         fetch(event.request.url)
       ])
+
     );
-  } else{
+  } else {
     //else return
   }
+
+  // Offline page functionality
+  event.respondWith(caches.match(event.request).then(function (response) {
+    if (response ) {
+      if(/api\/tasks/.test(response.url)){
+        fetch(response.url, {
+          method: 'GET'
+        }).then((json) => {
+          console.log(json);
+        });
+      }
+      return response;
+    }
+    var fetchRequest = event.request.clone();
+    return fetch(fetchRequest).then(function (response) {
+      if (!response || response.status !== 200) {
+        return response;
+      }
+      var responseToCache = response.clone();
+      caches.open(cacheName).then(function (cache) {
+        if (event.request.method === 'GET') {
+          cache.put(event.request, responseToCache);
+        }
+      });
+      return response;
+    }).catch(error => {
+      if (event.request.method === 'GET' &&
+        event.request.headers.get('accept').includes('text/html')) {
+        return caches.match(offlineUrl);
+      }
+    });
+  }));
+
 });
+
+
+//keeping data synchronized
+self.addEventListener('sync', (event) => {
+
+  if (event.tag === 'newTask') {
+
+    let promise = idbKeyval.keys();
+    promise.then((keys) => {
+      for (k of keys) {
+
+        idbKeyval.get(k).then(value =>
+          fetch('api/tasks', {
+            method: 'POST',
+            headers: new Headers({ 'content-type': 'application/json' }),
+            body: JSON.stringify(value)
+          }).done((response) => {
+            console.log(response);
+          }));
+        idbKeyval.delete(k);
+      }
+    })
+  }
+});
+
+
