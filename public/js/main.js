@@ -1,3 +1,24 @@
+
+
+function getNextId(){
+    $.ajax({
+        url: "api/tasks",
+        type: "GET",
+        dataType: "json"
+    }).done((json) => {
+        // save the next possible TaskId to the local storage
+        if (typeof(Storage) !== "undefined") {
+            // Code for localStorage/sessionStorage.
+            let nextId = json[json.length-1].id +1;
+            localStorage.setItem("nextId",nextId );
+        
+        } else {
+            // Sorry! No Web Storage support..
+        }
+       
+    });
+}
+
 $(function () {
     // Fetches all task and sorts them into Todo and Done
     $.ajax({
@@ -10,7 +31,17 @@ $(function () {
         $.each(json, (key, value) => {
             appendTask(value);
         });
+             // save the next possible TaskId to the local storage
+        if (typeof(Storage) !== "undefined") {
+            // Code for localStorage/sessionStorage.
+            localStorage.setItem("nextId", json[json.length-1].id +1);
+        
+        } else {
+            // Sorry! No Web Storage support..
+        }
+        
     });
+    
 
 });
 
@@ -36,7 +67,7 @@ function appendTask(value) {
 
     // Checks when the checkbox is changed and updates the task --> sends it to ToDo
     $('#task' + id).change(() => {
-        let category = $('#taskDiv'+id).parent().prop('className');
+        let category = $('#taskDiv' + id).parent().prop('className');
         changeTaskIsDone(value, category);
 
     });
@@ -76,11 +107,11 @@ function changeTaskIsDone(value, category) {
         description
     } = value;
 
-    switch(category){
+    switch (category) {
         case "todo": value.category = "done";
-        break;
+            break;
         case "done": value.category = "todo";
-        break;
+            break;
     }
 
 
@@ -128,21 +159,54 @@ function deleteTask(id) {
 
 // Actionlistener to creat a new Task
 $('#createTaskF').submit(() => {
+    let dataToSend = {
+        "description": $('#taskDescription').val(),
+        "category": "todo"
+    };
+
     $.ajax({
         url: 'api/tasks',
         dataType: 'json',
         type: 'post',
         contentType: 'application/json',
-        data: JSON.stringify({
-            "description": $('#taskDescription').val(),
-            "category": "todo"
-        }),
+        data: JSON.stringify(dataToSend),
         processData: false,
         success: function (data, textStatus, jQxhr) {
             appendTask(data);
+            console.log(data.id);
+            localStorage.setItem("nextId", data.id +1);
+            
         },
         error: function (request, textStatus, error) {
-            console.log(request.responseText);
+            if ('serviceWorker' in navigator && 'SyncManager' in window && dataToSend.description.length > 2&& typeof(Storage) !== "undefined") {
+                // navigator.serviceWorker.getRegistration().then(registration => {
+                //     document.getElementById('createTaskF').addEventListener('submit', () => {
+                //         registration.sync.register('insane').then(() => {
+                //             console.log("hallo");
+                //         });
+                //     })
+                // })
+
+                let nextId = localStorage.getItem("nextId");
+                localStorage.setItem("nextId", Number(nextId) +1);
+                //let promise = idbKeyval.keys();
+                //promise.then((keys) => {
+                    //let pid = keys.length + 1; //pending id
+                    //idbKeyval.set(`sendTask${pid}`, dataToSend);
+                    idbKeyval.set(`sendTask${nextId}`, dataToSend);
+                   
+                    let dataToSendModified = JSON.parse(JSON.stringify(dataToSend));
+                    //dataToSendModified[`id`] = `sendTask${pid}`;
+                    dataToSendModified[`id`] = nextId;
+
+                    appendTask(dataToSendModified);
+                    console.log(textStatus);
+                //})
+
+
+            } else {
+                console.log(request.responseText);
+            }
         }
     });
     // Empties the input field!

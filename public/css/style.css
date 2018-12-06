@@ -38,9 +38,12 @@ body {
     padding-bottom: 10px;
 }
 
-.listcontainer h2 {
+.listcontainer h1 {
     text-align: center;
 
+}
+h1 {
+    font-family: "lobster";
 }
 
 ul.todo, ul.done{
