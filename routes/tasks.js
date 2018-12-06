@@ -68,6 +68,7 @@ router.put('/:id', (req, res) => {
 
     task.description = req.body.description;
     task.isDone = req.body.isDone;
+    console.log(taks);
     res.send(task);
 });
 

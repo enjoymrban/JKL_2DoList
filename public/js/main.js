@@ -1,25 +1,26 @@
 
 
-function getNextId(){
+function getNextId() {
     $.ajax({
         url: "api/tasks",
         type: "GET",
         dataType: "json"
     }).done((json) => {
         // save the next possible TaskId to the local storage
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             // Code for localStorage/sessionStorage.
-            let nextId = json[json.length-1].id +1;
-            localStorage.setItem("nextId",nextId );
-        
+            let nextId = json[json.length - 1].id + 1;
+            localStorage.setItem("nextId", nextId);
+
         } else {
             // Sorry! No Web Storage support..
         }
-       
+
     });
 }
 
 $(function () {
+
     // Fetches all task and sorts them into Todo and Done
     $.ajax({
         url: "api/tasks",
@@ -31,18 +32,16 @@ $(function () {
         $.each(json, (key, value) => {
             appendTask(value);
         });
-             // save the next possible TaskId to the local storage
-        if (typeof(Storage) !== "undefined") {
+        // save the next possible TaskId to the local storage
+        if (typeof (Storage) !== "undefined") {
             // Code for localStorage/sessionStorage.
-            localStorage.setItem("nextId", json[json.length-1].id +1);
-        
+            localStorage.setItem("nextId", json[json.length - 1].id + 1);
+
         } else {
             // Sorry! No Web Storage support..
         }
-        
-    });
-    
 
+    });
 });
 
 // append Task to the right Table
@@ -159,6 +158,14 @@ function deleteTask(id) {
 
 // Actionlistener to creat a new Task
 $('#createTaskF').submit(() => {
+    if ('serviceWorker' in navigator && 'SyncManager' in window) {
+        navigator.serviceWorker.getRegistration().then(registration => {
+        registration.sync.register('newTask');
+        });
+
+    }
+
+
     let dataToSend = {
         "description": $('#taskDescription').val(),
         "category": "todo"
@@ -174,11 +181,11 @@ $('#createTaskF').submit(() => {
         success: function (data, textStatus, jQxhr) {
             appendTask(data);
             console.log(data.id);
-            localStorage.setItem("nextId", data.id +1);
-            
+            localStorage.setItem("nextId", data.id + 1);
+
         },
         error: function (request, textStatus, error) {
-            if ('serviceWorker' in navigator && 'SyncManager' in window && dataToSend.description.length > 2&& typeof(Storage) !== "undefined") {
+            if ('serviceWorker' in navigator && 'SyncManager' in window && dataToSend.description.length > 2 && typeof (Storage) !== "undefined") {
                 // navigator.serviceWorker.getRegistration().then(registration => {
                 //     document.getElementById('createTaskF').addEventListener('submit', () => {
                 //         registration.sync.register('insane').then(() => {
@@ -188,19 +195,19 @@ $('#createTaskF').submit(() => {
                 // })
 
                 let nextId = localStorage.getItem("nextId");
-                localStorage.setItem("nextId", Number(nextId) +1);
+                localStorage.setItem("nextId", Number(nextId) + 1);
                 //let promise = idbKeyval.keys();
                 //promise.then((keys) => {
-                    //let pid = keys.length + 1; //pending id
-                    //idbKeyval.set(`sendTask${pid}`, dataToSend);
-                    idbKeyval.set(`sendTask${nextId}`, dataToSend);
-                   
-                    let dataToSendModified = JSON.parse(JSON.stringify(dataToSend));
-                    //dataToSendModified[`id`] = `sendTask${pid}`;
-                    dataToSendModified[`id`] = nextId;
+                //let pid = keys.length + 1; //pending id
+                //idbKeyval.set(`sendTask${pid}`, dataToSend);
+                idbKeyval.set(`sendTask${nextId}`, dataToSend);
 
-                    appendTask(dataToSendModified);
-                    console.log(textStatus);
+                let dataToSendModified = JSON.parse(JSON.stringify(dataToSend));
+                //dataToSendModified[`id`] = `sendTask${pid}`;
+                dataToSendModified[`id`] = nextId;
+
+                appendTask(dataToSendModified);
+                console.log(textStatus);
                 //})
 
 

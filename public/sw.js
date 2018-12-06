@@ -11,7 +11,7 @@ self.addEventListener('install', event => {
       .then(cache => cache.addAll([
         //'./',
         offlineUrl,
-        //'/api/tasks',
+        '/api/tasks',
         './css/style.css',
         './js/idb-keyval.js',
         './js/main.js',
@@ -60,17 +60,27 @@ self.addEventListener('fetch', function (event) {
     //else return
   }
 
+ 
+
   // Offline page functionality
   event.respondWith(caches.match(event.request).then(function (response) {
-    if (response ) {
-      if(/api\/tasks/.test(response.url)){
-        fetch(response.url, {
-          method: 'GET'
-        }).then((json) => {
-          console.log(json);
-        });
-      }
-      return response;
+    if (response) {
+       if (/api\/tasks/.test(response.url)) {
+         fetch(response.url)
+           .then((resp) => {
+             if(resp.ok){
+              caches.open('todoList').then((cache) => {
+                let newResp = resp.clone();
+                cache.put('/api/tasks',newResp);
+                return new Response(newResp);
+              });
+
+             }
+
+           });
+             
+       }
+     return response;
     }
     var fetchRequest = event.request.clone();
     return fetch(fetchRequest).then(function (response) {
@@ -97,25 +107,28 @@ self.addEventListener('fetch', function (event) {
 
 //keeping data synchronized
 self.addEventListener('sync', (event) => {
+ 
+    if (event.tag === 'newTask') {
 
-  if (event.tag === 'newTask') {
+      let promise = idbKeyval.keys();
+      promise.then((keys) => {
+        for (k of keys) {
 
-    let promise = idbKeyval.keys();
-    promise.then((keys) => {
-      for (k of keys) {
+          idbKeyval.get(k).then(value =>
+            fetch('api/tasks', {
+              method: 'POST',
+              headers: new Headers({ 'content-type': 'application/json' }),
+              body: JSON.stringify(value)
+            }).then((response) => {
+              console.log(response);
+            }));
+          idbKeyval.delete(k);
+        }
+      })
+    }
 
-        idbKeyval.get(k).then(value =>
-          fetch('api/tasks', {
-            method: 'POST',
-            headers: new Headers({ 'content-type': 'application/json' }),
-            body: JSON.stringify(value)
-          }).done((response) => {
-            console.log(response);
-          }));
-        idbKeyval.delete(k);
-      }
-    })
-  }
+  
+
 });
 
 
