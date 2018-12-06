@@ -73,6 +73,13 @@ function appendTask(value) {
 
     //  Functions of the deleteIcon
     $('#deleteIcon' + id).click(() => {
+        if ('serviceWorker' in navigator && 'SyncManager' in window) {
+            navigator.serviceWorker.getRegistration().then(registration => {
+            registration.sync.register('taskToDelete');
+            });
+
+        }
+
         deleteTask(id);
     });
 }
@@ -134,6 +141,15 @@ function changeTaskIsDone(value, category) {
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log(errorThrown);
+            if ('serviceWorker' in navigator && 'SyncManager' in window) {
+                navigator.serviceWorker.getRegistration().then(registration => {
+                registration.sync.register('updatedTask');
+                idbKeyval.set(`updateTask${id}`, value);
+                $('#taskDiv' + id).remove();
+                appendTask(value);
+                });
+
+            }
         }
     });
 }
@@ -149,9 +165,15 @@ function deleteTask(id) {
                 id
             } = data;
             $('#taskDiv' + id).remove();
+
+
         },
         error: function (errorThrown) {
             console.log(errorThrown);
+            if ('serviceWorker' in navigator && 'SyncManager' in window) {
+            idbKeyval.set(`deleteTask${id}`, id);
+            $('#taskDiv' + id).remove();
+            }
         }
     });
 }
