@@ -67,7 +67,7 @@ router.put('/:id', (req, res) => {
     if (error) return res.status(400).send(error.details[0].message);
 
     task.description = req.body.description;
-    task.isDone = req.body.isDone;
+    task.category = req.body.category;
     res.send(task);
 });
 
