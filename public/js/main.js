@@ -215,7 +215,6 @@ $('#createTaskF').submit(() => {
         processData: false,
         success: function (data, textStatus, jQxhr) {
             appendTask(data);
-            console.log(data.id);
             localStorage.setItem("nextId", data.id + 1);
 
         },
