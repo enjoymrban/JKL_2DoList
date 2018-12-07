@@ -1,4 +1,5 @@
-
+// Priorities
+// Highest Priority A-B Lowest Priority
 
 function getNextId() {
     $.ajax({
@@ -68,7 +69,7 @@ function appendTask(value) {
     $('#task' + id).change(() => {
         if ('serviceWorker' in navigator && 'SyncManager' in window) {
             navigator.serviceWorker.getRegistration().then(registration => {
-            registration.sync.register('newTask');
+            registration.sync.register('needsSync');
             });
 
         }
@@ -81,7 +82,7 @@ function appendTask(value) {
     $('#deleteIcon' + id).click(() => {
         if ('serviceWorker' in navigator && 'SyncManager' in window) {
             navigator.serviceWorker.getRegistration().then(registration => {
-            registration.sync.register('newTask');
+            registration.sync.register('needsSync');
             });
 
         }
@@ -150,7 +151,7 @@ function changeTaskIsDone(value, category) {
             if ('serviceWorker' in navigator && 'SyncManager' in window) {
                 navigator.serviceWorker.getRegistration().then(registration => {
                 registration.sync.register('newTask');
-                idbKeyval.set(`updateTask${id}`, value);
+                idbKeyval.set(`B_updateTask${id}`, value);
                 $('#taskDiv' + id).remove();
                 appendTask(value);
                 });
@@ -177,7 +178,7 @@ function deleteTask(id) {
         error: function (errorThrown) {
             console.log(errorThrown);
             if ('serviceWorker' in navigator && 'SyncManager' in window) {
-            idbKeyval.set(`deleteTask${id}`, id);
+            idbKeyval.set(`C_deleteTask${id}`, id);
             $('#taskDiv' + id).remove();
             }
         }
@@ -188,7 +189,7 @@ function deleteTask(id) {
 $('#createTaskF').submit(() => {
     if ('serviceWorker' in navigator && 'SyncManager' in window) {
         navigator.serviceWorker.getRegistration().then(registration => {
-        registration.sync.register('newTask');
+        registration.sync.register('needsSync');
         });
 
     }
@@ -228,7 +229,7 @@ $('#createTaskF').submit(() => {
                 //promise.then((keys) => {
                 //let pid = keys.length + 1; //pending id
                 //idbKeyval.set(`sendTask${pid}`, dataToSend);
-                idbKeyval.set(`sendTask${nextId}`, dataToSend);
+                idbKeyval.set(`A_sendTask${nextId}`, dataToSend);
 
                 let dataToSendModified = JSON.parse(JSON.stringify(dataToSend));
                 //dataToSendModified[`id`] = `sendTask${pid}`;

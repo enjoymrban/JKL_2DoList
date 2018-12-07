@@ -118,15 +118,18 @@ self.addEventListener('fetch', function (event) {
 //keeping data synchronized
 self.addEventListener('sync', (event) => {
 
-  if (event.tag === 'newTask' || event.tag === 'taskToDelete' || event.tag === 'updatedTask') {
+  // IndexedDB is ordered alphabetically
+  // Keys are sorted after priority
+  // Heighest Priority  A-B  Lowest Priority
+  if (event.tag === 'needsSync') {
 
     let promise = idbKeyval.keys();
     promise.then((keys) => {
       console.table(keys);
-      for (let k = keys.length - 1; k >= 0; k--) {
-        console.log(keys[k]);
-        if (/sendTask/.test(keys[k])) {
-          idbKeyval.get(keys[k]).then((value) => {
+      for ( k of keys) {
+        console.log(k);
+        if (/sendTask/.test(k)) {
+          idbKeyval.get(k).then((value) => {
             fetch('api/tasks', {
               method: 'POST',
               headers: new Headers({
@@ -140,9 +143,9 @@ self.addEventListener('sync', (event) => {
             });
           });
 
-          idbKeyval.delete(keys[k]);
-        } else if (/updateTask/.test(keys[k])) {
-          idbKeyval.get(keys[k]).then((value) => {
+          idbKeyval.delete(k);
+        } else if (/updateTask/.test(k)) {
+          idbKeyval.get(k).then((value) => {
             let updatedTask = {
               "description": value.description,
               "category": value.category
@@ -158,9 +161,9 @@ self.addEventListener('sync', (event) => {
 
             });
           });
-          idbKeyval.delete(keys[k]);
-        } else if (/deleteTask/.test(keys[k])) {
-          idbKeyval.get(keys[k]).then((value) => {
+          idbKeyval.delete(k);
+        } else if (/deleteTask/.test(k)) {
+          idbKeyval.get(k).then((value) => {
             fetch('api/tasks/' + value, {
               method: 'DELETE'
 
@@ -169,7 +172,7 @@ self.addEventListener('sync', (event) => {
 
             });
           });
-          idbKeyval.delete(keys[k]);
+          idbKeyval.delete(k);
         }
       };
     })
