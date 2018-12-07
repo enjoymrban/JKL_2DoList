@@ -10,9 +10,12 @@ function getNextId() {
         // save the next possible TaskId to the local storage
         if (typeof (Storage) !== "undefined") {
             // Code for localStorage/sessionStorage.
+            if(json.length>0){
             let nextId = json[json.length - 1].id + 1;
             localStorage.setItem("nextId", nextId);
-
+            } else{
+                localStorage.setItem("nextId", 0);
+            }
         } else {
             // Sorry! No Web Storage support..
         }
@@ -36,8 +39,11 @@ $(function () {
         // save the next possible TaskId to the local storage
         if (typeof (Storage) !== "undefined") {
             // Code for localStorage/sessionStorage.
+            if(json.length>0){
             localStorage.setItem("nextId", json[json.length - 1].id + 1);
-
+            }else{
+                localStorage.setItem("nextId", 0);
+            }
         } else {
             // Sorry! No Web Storage support..
         }
@@ -215,32 +221,17 @@ $('#createTaskF').submit(() => {
         },
         error: function (request, textStatus, error) {
             if ('serviceWorker' in navigator && 'SyncManager' in window && dataToSend.description.length > 2 && typeof (Storage) !== "undefined") {
-                // navigator.serviceWorker.getRegistration().then(registration => {
-                //     document.getElementById('createTaskF').addEventListener('submit', () => {
-                //         registration.sync.register('insane').then(() => {
-                //             console.log("hallo");
-                //         });
-                //     })
-                // })
 
                 let nextId = localStorage.getItem("nextId");
                 localStorage.setItem("nextId", Number(nextId) + 1);
-                //let promise = idbKeyval.keys();
-                //promise.then((keys) => {
-                //let pid = keys.length + 1; //pending id
-                //idbKeyval.set(`sendTask${pid}`, dataToSend);
                 idbKeyval.set(`A_sendTask${nextId}`, dataToSend);
 
                 let dataToSendModified = JSON.parse(JSON.stringify(dataToSend));
-                //dataToSendModified[`id`] = `sendTask${pid}`;
                 dataToSendModified[`id`] = nextId;
 
                 appendTask(dataToSendModified);
                 console.log(textStatus);
-                //})
-
-
-            } else {
+                         } else {
                 console.log(request.responseText);
             }
         }

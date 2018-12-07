@@ -50,7 +50,8 @@ self.addEventListener('fetch', function (event) {
     }
   }
   // Exampel for Service Worker to the rescue. To avoid Single Point of Failure
-  // Check for the googleapis domain
+  // check for /abcd/ "fake" domain if it takes to long to load abort
+  // example file test-file-when-loading-takes-to-long-abort.css
   if (/abcd/.test(event.request.url)) {
     return event.respondWith(
       Promise.race([
@@ -125,8 +126,7 @@ self.addEventListener('sync', (event) => {
 
     let promise = idbKeyval.keys();
     promise.then((keys) => {
-      console.table(keys);
-      for ( k of keys) {
+      for (let k of keys) {
         console.log(k);
         if (/sendTask/.test(k)) {
           idbKeyval.get(k).then((value) => {
@@ -174,7 +174,7 @@ self.addEventListener('sync', (event) => {
           });
           idbKeyval.delete(k);
         }
-      };
-    })
+      }
+    });
   }
 });

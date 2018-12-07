@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster" type="text/css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://abcd/style.css">
+    <link rel="stylesheet" href="https://abcd/test-file-when-loading-takes-to-long-abort.css">
     <title>JKL_2DoList</title>
 </head>
 
@@ -45,7 +45,7 @@
 
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="listcontainer col-6">
+            <div class="listcontainer col-5">
                 <h1>ToDo</h1>
                 <ul class="todo">
 
@@ -60,7 +60,7 @@
         </div>
 
         <div class="row justify-content-center">
-            <div class="listcontainer col-6" id="doneContainer" style="display:none">
+            <div class="listcontainer col-5" id="doneContainer" style="display:none">
                 <h1>Done</h1>
                 <ul class="done">
 
@@ -90,7 +90,7 @@
 
 
                 }).catch((err) => {
-                    // registration faild: 
+                    // registration faild:
                     console.log('ServiceWorker registration failed: ', err);
                 });
         }
