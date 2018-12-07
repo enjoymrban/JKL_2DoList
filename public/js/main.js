@@ -66,6 +66,12 @@ function appendTask(value) {
 
     // Checks when the checkbox is changed and updates the task --> sends it to ToDo
     $('#task' + id).change(() => {
+        if ('serviceWorker' in navigator && 'SyncManager' in window) {
+            navigator.serviceWorker.getRegistration().then(registration => {
+            registration.sync.register('newTask');
+            });
+
+        }
         let category = $('#taskDiv' + id).parent().prop('className');
         changeTaskIsDone(value, category);
 
@@ -75,7 +81,7 @@ function appendTask(value) {
     $('#deleteIcon' + id).click(() => {
         if ('serviceWorker' in navigator && 'SyncManager' in window) {
             navigator.serviceWorker.getRegistration().then(registration => {
-            registration.sync.register('taskToDelete');
+            registration.sync.register('newTask');
             });
 
         }
@@ -143,7 +149,7 @@ function changeTaskIsDone(value, category) {
             console.log(errorThrown);
             if ('serviceWorker' in navigator && 'SyncManager' in window) {
                 navigator.serviceWorker.getRegistration().then(registration => {
-                registration.sync.register('updatedTask');
+                registration.sync.register('newTask');
                 idbKeyval.set(`updateTask${id}`, value);
                 $('#taskDiv' + id).remove();
                 appendTask(value);

@@ -122,7 +122,9 @@ self.addEventListener('sync', (event) => {
 
     let promise = idbKeyval.keys();
     promise.then((keys) => {
-      for (let k = keys.length-1; k>=0; k--) {
+      console.table(keys);
+      for (let k = keys.length - 1; k >= 0; k--) {
+        console.log(keys[k]);
         if (/sendTask/.test(keys[k])) {
           idbKeyval.get(keys[k]).then((value) => {
             fetch('api/tasks', {
@@ -134,9 +136,28 @@ self.addEventListener('sync', (event) => {
             }).then((response) => {
               console.log(response);
 
+
             });
           });
 
+          idbKeyval.delete(keys[k]);
+        } else if (/updateTask/.test(keys[k])) {
+          idbKeyval.get(keys[k]).then((value) => {
+            let updatedTask = {
+              "description": value.description,
+              "category": value.category
+            };
+            fetch('api/tasks/' + value.id, {
+              method: 'PUT',
+              headers: {
+                'content-type': 'application/json'
+              },
+              body: JSON.stringify(updatedTask)
+            }).then((response) => {
+              console.log(response);
+
+            });
+          });
           idbKeyval.delete(keys[k]);
         } else if (/deleteTask/.test(keys[k])) {
           idbKeyval.get(keys[k]).then((value) => {
@@ -149,75 +170,8 @@ self.addEventListener('sync', (event) => {
             });
           });
           idbKeyval.delete(keys[k]);
-        } else if (/updateTask/.test(keys[k])) {
-          idbKeyval.get(keys[k]).then((value) => {
-            let updatedTask = {
-              "description": value.description,
-              "category": value.category
-            };
-            fetch('api/tasks/' + value.id, {
-              method: 'PUT',
-              body: JSON.stringify(updatedTask)
-            }).then((response) => {
-              console.log(response);
-
-            });
-          });
-          idbKeyval.delete(keys[k]);
         }
       };
     })
-
-
-
-    // else if (event.tag === 'taskToDelete') {
-
-    //   let promise = idbKeyval.keys();
-    //   promise.then((keys) => {
-    //     for (let k of keys) {
-    //       if (/deleteTask/.test(k)) {
-    //         idbKeyval.get(k).then((value) => {
-    //           fetch('api/tasks/' + value, {
-    //             method: 'DELETE'
-
-    //           }).then((response) => {
-    //             console.log(response);
-
-    //           });
-    //         });
-    //         idbKeyval.delete(k);
-    //       }
-    //     }
-    //   });
-    // }else if (event.tag === 'updatedTask') {
-
-
-
-
-    //   let promise = idbKeyval.keys();
-    //   promise.then((keys) => {
-    //     for (let k of keys) {
-    //       if (/updateTask/.test(k)) {
-    //         idbKeyval.get(k).then((value) => {
-    //           let updatedTask = {
-    //             "description": value.description,
-    //             "category": value.category
-    //         };
-    //           fetch('api/tasks/' + value.id, {
-    //             method: 'PUT',
-    //             body: JSON.stringify(updatedTask)
-    //           }).then((response) => {
-    //             console.log(response);
-
-    //           });
-    //         });
-    //         idbKeyval.delete(k);
-    //       }
-    //     }
-    //   });
-    // }
-
-
-
   }
 });
