@@ -60,11 +60,7 @@ self.addEventListener('fetch', function (event) {
       ])
 
     );
-  } else {
-    //else return
   }
-
-
 
   // Offline page functionality
   event.respondWith(caches.match(event.request).then(function (response) {
@@ -106,13 +102,26 @@ self.addEventListener('sync', (event) => {
   // Keys are sorted after priority
   // Heighest Priority  A(GET)-B(DELETE)  Lowest Priority
   if (event.tag === 'needsSync') {
-
     let promise = idbKeyval.keys();
     promise.then((keys) => {
-      for (let k of keys) {
-        console.log(k);
+      let posts = [];
+      let puts = [];
+      let deletes = [];
+
+      for(let k of keys){
         if (/sendTask/.test(k)) {
-          idbKeyval.get(k).then((value) => {
+          posts.push(k);
+        }else if(/updateTask/.test(k)){
+          puts.push(k);
+        }else if((/deleteTask/.test(k))){
+          deletes.push(k);
+        }
+      }      
+      let sortedKeys = posts.concat( puts, deletes); 
+      
+      for (let sortedKey of sortedKeys) {
+        if (/sendTask/.test(sortedKey)) {
+          idbKeyval.get(sortedKey).then((value) => {
             fetch('api/tasks', {
               method: 'POST',
               headers: new Headers({
@@ -120,15 +129,15 @@ self.addEventListener('sync', (event) => {
               }),
               body: JSON.stringify(value)
             }).then((response) => {
-              console.log(response);
-
-
+              console.log("POST sync successful");
+            }).catch(err=>{
+              console.log("POST sync failed");
             });
           });
 
-          idbKeyval.delete(k);
-        } else if (/updateTask/.test(k)) {
-          idbKeyval.get(k).then((value) => {
+          idbKeyval.delete(sortedKey);
+        } else if (/updateTask/.test(sortedKey)) {
+          idbKeyval.get(sortedKey).then((value) => {
             let updatedTask = {
               "description": value.description,
               "category": value.category
@@ -140,24 +149,27 @@ self.addEventListener('sync', (event) => {
               },
               body: JSON.stringify(updatedTask)
             }).then((response) => {
-              console.log(response);
-
+              console.log("PUT sync successful");
+            }).catch(err=>{
+              console.log("PUT sync failed");
             });
           });
-          idbKeyval.delete(k);
-        } else if (/deleteTask/.test(k)) {
-          idbKeyval.get(k).then((value) => {
+          idbKeyval.delete(sortedKey);
+        } else if (/deleteTask/.test(sortedKey)) {
+          idbKeyval.get(sortedKey).then((value) => {
             fetch('api/tasks/' + value, {
               method: 'DELETE'
 
             }).then((response) => {
-              console.log(response);
+              console.log("DELETE sync successful");
 
+            }).catch(err=>{
+              console.log("DELETE sync failed");
             });
           });
-          idbKeyval.delete(k);
+          idbKeyval.delete(sortedKey);
         }
       }
-    });
+    });        
   }
 });

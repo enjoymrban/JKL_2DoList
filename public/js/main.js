@@ -1,5 +1,6 @@
-// Priorities
-// Highest Priority A-B Lowest Priority
+
+
+
 
 function getNextId() {
     $.ajax({
@@ -10,20 +11,52 @@ function getNextId() {
         // save the next possible TaskId to the local storage
         if (typeof (Storage) !== "undefined") {
             // Code for localStorage/sessionStorage.
-            if(json.length>0){
-            let nextId = json[json.length - 1].id + 1;
-            localStorage.setItem("nextId", nextId);
-            } else{
+            if (json.length > 0) {
+                let nextId = json[json.length - 1].id + 1;
+                localStorage.setItem("nextId", nextId);
+            } else {
                 localStorage.setItem("nextId", 0);
             }
         } else {
             // Sorry! No Web Storage support..
+            console.log("Webstorage is not supported...");
         }
 
     });
 }
 
+function notification(htmlContent){
+    $("#notification").empty();
+    $("#notification").fadeIn("slow").append(htmlContent).delay(1500).fadeOut("slow");
+  
+}
+
 $(function () {
+   
+
+    function showIndicator() {
+        notification("<p>You are offline!</p>");
+        $('#offline').show();
+    }
+    function hideIndicator() {
+        notification("<p>You are back online!</p>");
+        $('#offline').hide();
+    }
+    window.addEventListener('online', hideIndicator);
+    window.addEventListener('offline', showIndicator);
+
+    if(!navigator.onLine){
+        showIndicator();
+        if (typeof (Storage) !== "undefined") {
+            // Code for localStorage/sessionStorage.
+            if (json.length > 0) {
+                let nextId = json[json.length - 1].id + 1000;
+                localStorage.setItem("nextId", nextId);
+        } else {
+            // Sorry! No Web Storage support..
+            console.log("Webstorage is not supported...");
+        }
+    }
 
     // Fetches all task and sorts them into Todo and Done
     $.ajax({
@@ -39,13 +72,14 @@ $(function () {
         // save the next possible TaskId to the local storage
         if (typeof (Storage) !== "undefined") {
             // Code for localStorage/sessionStorage.
-            if(json.length>0){
-            localStorage.setItem("nextId", json[json.length - 1].id + 1);
-            }else{
+            if (json.length > 0) {
+                localStorage.setItem("nextId", json[json.length - 1].id + 1);
+            } else {
                 localStorage.setItem("nextId", 0);
             }
         } else {
             // Sorry! No Web Storage support..
+            console.log("Webstorage is not supported...");
         }
 
     });
@@ -75,7 +109,7 @@ function appendTask(value) {
     $('#task' + id).change(() => {
         if ('serviceWorker' in navigator && 'SyncManager' in window) {
             navigator.serviceWorker.getRegistration().then(registration => {
-            registration.sync.register('needsSync');
+                registration.sync.register('needsSync');
             });
 
         }
@@ -88,7 +122,7 @@ function appendTask(value) {
     $('#deleteIcon' + id).click(() => {
         if ('serviceWorker' in navigator && 'SyncManager' in window) {
             navigator.serviceWorker.getRegistration().then(registration => {
-            registration.sync.register('needsSync');
+                registration.sync.register('needsSync');
             });
 
         }
@@ -97,7 +131,7 @@ function appendTask(value) {
     });
 }
 
-// Templeta to create a new Task including text and icons
+// Template to create a new Task including text and icons
 function taskTemplate(value) {
     const {
         id,
@@ -153,15 +187,16 @@ function changeTaskIsDone(value, category) {
 
         },
         error: function (jqXhr, textStatus, errorThrown) {
-            console.log(errorThrown);
             if ('serviceWorker' in navigator && 'SyncManager' in window) {
                 navigator.serviceWorker.getRegistration().then(registration => {
-                registration.sync.register('newTask');
-                idbKeyval.set(`B_updateTask${id}`, value);
-                $('#taskDiv' + id).remove();
-                appendTask(value);
+                    registration.sync.register('newTask');
+                    idbKeyval.set(`updateTask${id}`, value);
+                    $('#taskDiv' + id).remove();
+                    appendTask(value);
                 });
 
+            } else {
+                console.log(errorThrown);
             }
         }
     });
@@ -182,10 +217,11 @@ function deleteTask(id) {
 
         },
         error: function (errorThrown) {
-            console.log(errorThrown);
             if ('serviceWorker' in navigator && 'SyncManager' in window) {
-            idbKeyval.set(`C_deleteTask${id}`, id);
-            $('#taskDiv' + id).remove();
+                idbKeyval.set(`deleteTask${id}`, id);
+                $('#taskDiv' + id).remove();
+            } else {
+                console.log(errorThrown);
             }
         }
     });
@@ -195,7 +231,7 @@ function deleteTask(id) {
 $('#createTaskF').submit(() => {
     if ('serviceWorker' in navigator && 'SyncManager' in window) {
         navigator.serviceWorker.getRegistration().then(registration => {
-        registration.sync.register('needsSync');
+            registration.sync.register('needsSync');
         });
 
     }
@@ -218,20 +254,22 @@ $('#createTaskF').submit(() => {
             localStorage.setItem("nextId", data.id + 1);
 
         },
-        error: function (request, textStatus, error) {
+        error: function (errorThrown, textStatus, error) {
             if ('serviceWorker' in navigator && 'SyncManager' in window && dataToSend.description.length > 2 && typeof (Storage) !== "undefined") {
 
                 let nextId = localStorage.getItem("nextId");
                 localStorage.setItem("nextId", Number(nextId) + 1);
-                idbKeyval.set(`A_sendTask${nextId}`, dataToSend);
+                idbKeyval.set(`sendTask${nextId}`, dataToSend);
 
                 let dataToSendModified = JSON.parse(JSON.stringify(dataToSend));
                 dataToSendModified[`id`] = nextId;
 
                 appendTask(dataToSendModified);
-                console.log(textStatus);
-                         } else {
-                console.log(request.responseText);
+                notification("<p><i id='checkIcon' class='material-icons notIcon'>check_circle</i></i>New task queued!</p>")
+
+            } else {
+                console.log(errorThrown);
+                notification("<p><i id='errorIcon' class='material-icons notIcon'>error</i>New task failed!</p>")
             }
         }
     });
