@@ -1,7 +1,4 @@
-
-
-
-
+// Helper functions
 function getNextId() {
     $.ajax({
         url: "api/tasks",
@@ -25,37 +22,30 @@ function getNextId() {
     });
 }
 
-function notification(htmlContent){
+function notification(htmlContent) {
     $("#notification").empty();
     $("#notification").fadeIn("slow").append(htmlContent).delay(1500).fadeOut("slow");
-  
+
 }
 
-$(function () {
-   
 
-    function showIndicator() {
+$(function () {
+
+
+    function offline() {
         notification("<p>You are offline!</p>");
         $('#offline').show();
     }
-    function hideIndicator() {
+
+    function online() {
         notification("<p>You are back online!</p>");
         $('#offline').hide();
     }
-    window.addEventListener('online', hideIndicator);
-    window.addEventListener('offline', showIndicator);
+    window.addEventListener('online', online);
+    window.addEventListener('offline', offline);
 
-    if(!navigator.onLine){
-        showIndicator();
-        if (typeof (Storage) !== "undefined") {
-            // Code for localStorage/sessionStorage.
-            if (json.length > 0) {
-                let nextId = json[json.length - 1].id + 1000;
-                localStorage.setItem("nextId", nextId);
-        } else {
-            // Sorry! No Web Storage support..
-            console.log("Webstorage is not supported...");
-        }
+    if (!navigator.onLine) {
+        offline();
     }
 
     // Fetches all task and sorts them into Todo and Done
@@ -83,6 +73,7 @@ $(function () {
         }
 
     });
+
 });
 
 // append Task to the right Table
@@ -161,9 +152,11 @@ function changeTaskIsDone(value, category) {
     } = value;
 
     switch (category) {
-        case "todo": value.category = "done";
+        case "todo":
+            value.category = "done";
             break;
-        case "done": value.category = "todo";
+        case "done":
+            value.category = "todo";
             break;
     }
 
@@ -195,8 +188,11 @@ function changeTaskIsDone(value, category) {
                     appendTask(value);
                 });
 
+                notification("<p><i id='checkIcon' class='material-icons notIcon'>check_circle</i></i>Change queued!</p>");
+
             } else {
                 console.log(errorThrown);
+                notification("<p><i id='errorIcon' class='material-icons notIcon'>error</i>Network error!</p>");
             }
         }
     });
@@ -220,8 +216,10 @@ function deleteTask(id) {
             if ('serviceWorker' in navigator && 'SyncManager' in window) {
                 idbKeyval.set(`deleteTask${id}`, id);
                 $('#taskDiv' + id).remove();
+                notification("<p><i id='checkIcon' class='material-icons notIcon'>check_circle</i></i>Change queued!</p>");
             } else {
                 console.log(errorThrown);
+                notification("<p><i id='errorIcon' class='material-icons notIcon'>error</i>Network error!</p>");
             }
         }
     });
@@ -265,11 +263,11 @@ $('#createTaskF').submit(() => {
                 dataToSendModified[`id`] = nextId;
 
                 appendTask(dataToSendModified);
-                notification("<p><i id='checkIcon' class='material-icons notIcon'>check_circle</i></i>New task queued!</p>")
+                notification("<p><i id='checkIcon' class='material-icons notIcon'>check_circle</i></i>Change queued!</p>");
 
             } else {
                 console.log(errorThrown);
-                notification("<p><i id='errorIcon' class='material-icons notIcon'>error</i>New task failed!</p>")
+                notification("<p><i id='errorIcon' class='material-icons notIcon'>error</i>Network error!</p>");
             }
         }
     });

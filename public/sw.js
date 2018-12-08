@@ -4,6 +4,7 @@ importScripts('./js/idb-keyval.js');
 const cacheName = 'todoList';
 const offlineUrl = '/index-offline.html';
 
+
 // Cache our known resources during install
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -64,7 +65,7 @@ self.addEventListener('fetch', function (event) {
 
   // Offline page functionality
   event.respondWith(caches.match(event.request).then(function (response) {
-    
+
     //If the the client is online don't take tasks from cache, if it is offline take from storage!
     if (response && (!/api\/tasks/.test(response.url) || !navigator.onLine)) {
       return response;
@@ -116,9 +117,9 @@ self.addEventListener('sync', (event) => {
         }else if((/deleteTask/.test(k))){
           deletes.push(k);
         }
-      }      
-      let sortedKeys = posts.concat( puts, deletes); 
-      
+      }
+      let sortedKeys = posts.concat( puts, deletes);
+
       for (let sortedKey of sortedKeys) {
         if (/sendTask/.test(sortedKey)) {
           idbKeyval.get(sortedKey).then((value) => {
@@ -132,6 +133,7 @@ self.addEventListener('sync', (event) => {
               console.log("POST sync successful");
             }).catch(err=>{
               console.log("POST sync failed");
+
             });
           });
 
@@ -152,6 +154,7 @@ self.addEventListener('sync', (event) => {
               console.log("PUT sync successful");
             }).catch(err=>{
               console.log("PUT sync failed");
+
             });
           });
           idbKeyval.delete(sortedKey);
@@ -165,11 +168,13 @@ self.addEventListener('sync', (event) => {
 
             }).catch(err=>{
               console.log("DELETE sync failed");
+
             });
           });
           idbKeyval.delete(sortedKey);
         }
       }
-    });        
+    });
+
   }
-});
+  });
