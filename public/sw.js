@@ -68,24 +68,7 @@ self.addEventListener('fetch', function (event) {
 
   // Offline page functionality
   event.respondWith(caches.match(event.request).then(function (response) {
-    // if (response) {
-    //    if (/api\/tasks/.test(response.url)) {
-    //     caches.open('todoList').then((cache) => {
-    //      fetch(response.url)
-    //        .then((resp) => {
-    //          if(resp.ok){
-    //             let newResp = resp.clone();
-    //             cache.put('/api/tasks',newResp);
-    //             //return newResp;
-    //          }
-    //       });
-
-    //     });
-
-    //    }
-    //  return response;
-    // }
-
+    
     //If the the client is online don't take tasks from cache, if it is offline take from storage!
     if (response && (!/api\/tasks/.test(response.url) || !navigator.onLine)) {
       return response;
@@ -121,7 +104,7 @@ self.addEventListener('sync', (event) => {
 
   // IndexedDB is ordered alphabetically
   // Keys are sorted after priority
-  // Heighest Priority  A-B  Lowest Priority
+  // Heighest Priority  A(GET)-B(DELETE)  Lowest Priority
   if (event.tag === 'needsSync') {
 
     let promise = idbKeyval.keys();

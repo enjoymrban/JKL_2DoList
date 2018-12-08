@@ -77,18 +77,8 @@
         if ('serviceWorker' in navigator && 'SyncManager' in window) {
             navigator.serviceWorker.register('sw.js').then(registration => navigator.serviceWorker.ready)
                 .then(registration => {
-                    console.log(registration);
-                    // document.getElementById('createTaskF').addEventListener('submit', () => {
-                    //     registration.sync.register('newTask').then(() => {
-                    //         let payload = {
-                    //             "description": document.getElementById('taskDescription').value,
-                    //             "category": "todo"
-                    //         };
-                    //         //idbKeyval.set('sendTask', payload);
-                    //     });
-                    // });
-
-
+                    console.log("ServiceWorker registration complete: ", registration);
+                   
                 }).catch((err) => {
                     // registration faild:
                     console.log('ServiceWorker registration failed: ', err);
