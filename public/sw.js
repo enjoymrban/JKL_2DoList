@@ -70,6 +70,8 @@ self.addEventListener('fetch', function (event) {
     if (response && (!/api\/tasks/.test(response.url) || !navigator.onLine)) {
       return response;
     }
+
+
     var fetchRequest = event.request.clone();
     return fetch(fetchRequest).then(function (response) {
       if (!response || response.status !== 200) {
@@ -89,7 +91,15 @@ self.addEventListener('fetch', function (event) {
       if (event.request.method === 'GET' &&
         event.request.headers.get('accept').includes('text/html')) {
         return caches.match(offlineUrl);
+      }else {
+        // if a post put or delete is requested the cache ignores the request
+        if(event.request.method === 'POST' || event.request.method === 'PUT' || event.request.method === 'DELETE' ){
+        var init = { "status" : 200 , "statusText" : "Cache ignored the request and returned nothing!" };
+        var cacheResponse = new Response(init);
+        return cacheResponse;
+        }
       }
+      console.log(error);
     });
   }));
 

@@ -19,6 +19,7 @@ The App has been tested with Chrome!
 
 ## Deployment
 
+!Attention the connection has to be https!
 You can find a live Version on [HEROKU](https://jkl2dolist.herokuapp.com)
 
 ## Built With
