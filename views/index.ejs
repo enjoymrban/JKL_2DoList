@@ -15,8 +15,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="css/style.css">
+    <!-- A file to demonstrate auto aboart by the service Worker -->
     <link rel="stylesheet" href="https://abcd/test-file-when-loading-takes-to-long-abort.css">
     <title>JKL_2DoList</title>
+    <meta name="Description" content="A simple app to manage smaller tasks.">
 </head>
 
 <body>
@@ -72,8 +74,8 @@
 
     <div id="notification">
 
-        
-      
+
+
     </div>
 
     <script src="./js/idb-keyval.js"></script>
@@ -83,7 +85,7 @@
             navigator.serviceWorker.register('sw.js').then(registration => navigator.serviceWorker.ready)
                 .then(registration => {
                     console.log("ServiceWorker registration complete: ", registration);
-                   
+
                 }).catch((err) => {
                     // registration faild:
                     console.log('ServiceWorker registration failed: ', err);
