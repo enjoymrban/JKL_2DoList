@@ -34,6 +34,10 @@ body {
     display: none;
 }
 
+#notification p {
+    margin-bottom: 0px;
+}
+
 .notIcon{
     position: relative;
     font-size: 30px;
