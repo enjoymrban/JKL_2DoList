@@ -3,7 +3,7 @@
     "short_name": "2DoList",
     "start_url": "/",
     "display": "fullscreen",
-    "theme_color": "#FFFFFF",
+    "theme_color": "#d9eafc",
     "background_color": "#203A43",
     "icons": [
  	 {
