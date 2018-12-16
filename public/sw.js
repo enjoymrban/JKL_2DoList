@@ -9,19 +9,19 @@ const offlineUrl = '/index-offline.html';
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(cacheName)
-      .then(cache => cache.addAll([
-        //'./',
-        offlineUrl,
-        '/api/tasks',
-        './css/style.css',
-        './js/idb-keyval.js',
-        './js/main.js',
+    .then(cache => cache.addAll([
+      //'./',
+      offlineUrl,
+      '/api/tasks',
+      './css/style.css',
+      './js/idb-keyval.js',
+      './js/main.js',
 
-        'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js',
-        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js',
-        'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
-      ]))
+      'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js',
+      'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js',
+      'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
+    ]))
   );
 });
 
@@ -64,44 +64,48 @@ self.addEventListener('fetch', function (event) {
   }
 
   // Offline page functionality
-  event.respondWith(caches.match(event.request).then(function (response) {
+  event.respondWith(
+    caches.match(event.request).then(function (response) {
 
-    //If the the client is online don't take tasks from cache, if it is offline take from storage!
-    if (response && (!/api\/tasks/.test(response.url) || !navigator.onLine)) {
-      return response;
-    }
-
-
-    var fetchRequest = event.request.clone();
-    return fetch(fetchRequest).then(function (response) {
-      if (!response || response.status !== 200) {
+      //If the the client is online don't take tasks from cache, if it is offline take from storage!
+      if (response && (!/api\/tasks/.test(response.url) || !navigator.onLine)) {
         return response;
       }
-      var responseToCache = response.clone();
-      caches.open(cacheName).then(function (cache) {
-        if (event.request.method === 'GET') {
-          cache.put(event.request, responseToCache);
+
+
+      var fetchRequest = event.request.clone();
+      return fetch(fetchRequest).then(function (response) {
+        if (!response || response.status !== 200) {
+          return response;
         }
+        var responseToCache = response.clone();
+        caches.open(cacheName).then(function (cache) {
+          if (event.request.method === 'GET') {
+            cache.put(event.request, responseToCache);
+          }
+        });
+        return response;
+
+
+      }).catch(error => {
+
+        if (event.request.method === 'GET' &&
+          event.request.headers.get('accept').includes('text/html')) {
+          return caches.match(offlineUrl);
+        } else {
+          // if a post put or delete is requested the cache ignores the request
+          if (event.request.method === 'POST' || event.request.method === 'PUT' || event.request.method === 'DELETE') {
+            var init = {
+              "status": 200,
+              "statusText": "Cache ignored the request and returned nothing!"
+            };
+            var cacheResponse = new Response(init);
+            return cacheResponse;
+          }
+        }
+        console.log(error);
       });
-      return response;
-
-
-    }).catch(error => {
-
-      if (event.request.method === 'GET' &&
-        event.request.headers.get('accept').includes('text/html')) {
-        return caches.match(offlineUrl);
-      }else {
-        // if a post put or delete is requested the cache ignores the request
-        if(event.request.method === 'POST' || event.request.method === 'PUT' || event.request.method === 'DELETE' ){
-        var init = { "status" : 200 , "statusText" : "Cache ignored the request and returned nothing!" };
-        var cacheResponse = new Response(init);
-        return cacheResponse;
-        }
-      }
-      console.log(error);
-    });
-  }));
+    }));
 
 });
 
@@ -119,16 +123,16 @@ self.addEventListener('sync', (event) => {
       let puts = [];
       let deletes = [];
 
-      for(let k of keys){
+      for (let k of keys) {
         if (/sendTask/.test(k)) {
           posts.push(k);
-        }else if(/updateTask/.test(k)){
+        } else if (/updateTask/.test(k)) {
           puts.push(k);
-        }else if((/deleteTask/.test(k))){
+        } else if ((/deleteTask/.test(k))) {
           deletes.push(k);
         }
       }
-      let sortedKeys = posts.concat( puts, deletes);
+      let sortedKeys = posts.concat(puts, deletes);
 
       for (let sortedKey of sortedKeys) {
         if (/sendTask/.test(sortedKey)) {
@@ -141,7 +145,7 @@ self.addEventListener('sync', (event) => {
               body: JSON.stringify(value)
             }).then((response) => {
               console.log("POST sync successful");
-            }).catch(err=>{
+            }).catch(err => {
               console.log("POST sync failed");
 
             });
@@ -162,7 +166,7 @@ self.addEventListener('sync', (event) => {
               body: JSON.stringify(updatedTask)
             }).then((response) => {
               console.log("PUT sync successful");
-            }).catch(err=>{
+            }).catch(err => {
               console.log("PUT sync failed");
 
             });
@@ -176,7 +180,7 @@ self.addEventListener('sync', (event) => {
             }).then((response) => {
               console.log("DELETE sync successful");
 
-            }).catch(err=>{
+            }).catch(err => {
               console.log("DELETE sync failed");
 
             });
@@ -187,4 +191,4 @@ self.addEventListener('sync', (event) => {
     });
 
   }
-  });
+});
