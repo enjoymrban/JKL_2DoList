@@ -2,28 +2,7 @@
 importScripts('./js/idb-keyval.js');
 
 const cacheName = 'todoList';
-const offlineUrl = '/index-offline.html';
 
-
-// Cache our known resources during install
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(cacheName)
-      .then(cache => cache.addAll([
-        //'./',
-        offlineUrl,
-        '/api/tasks',
-        './css/style.css',
-        './js/idb-keyval.js',
-        './js/main.js',
-
-        'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js',
-        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js',
-        'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
-      ]))
-  );
-});
 
 // Handle network delays
 function timeout(delay) {
@@ -39,7 +18,6 @@ function timeout(delay) {
 
 self.addEventListener('fetch', function (event) {
 
-
   // Intercepting networkrequests
   // dont' load google fonts and icons if save-data header is on. In GET Request of the Localhost!
   if (event.request.headers.get('save-data')) {
@@ -53,7 +31,7 @@ self.addEventListener('fetch', function (event) {
   // Exampel for Service Worker to the rescue. To avoid Single Point of Failure
   // check for /abcd/ "fake" domain if it takes to long to load abort
   // example file test-file-when-loading-takes-to-long-abort.css
-  if (/abcd/.test(event.request.url)) {
+  if (/fonts.googleapi.com/.test(event.request.url)) {
     return event.respondWith(
       Promise.race([
         timeout(300),
@@ -71,7 +49,6 @@ self.addEventListener('fetch', function (event) {
       return response;
     }
 
-
     var fetchRequest = event.request.clone();
     return fetch(fetchRequest).then(function (response) {
       if (!response || response.status !== 200) {
@@ -85,20 +62,15 @@ self.addEventListener('fetch', function (event) {
       });
       return response;
 
-
     }).catch(error => {
-
-      if (event.request.method === 'GET' &&
-        event.request.headers.get('accept').includes('text/html')) {
-        return caches.match(offlineUrl);
-      }else {
+    
         // if a post put or delete is requested the cache ignores the request
         if(event.request.method === 'POST' || event.request.method === 'PUT' || event.request.method === 'DELETE' ){
         var init = { "status" : 200 , "statusText" : "Cache ignored the request and returned nothing!" };
         var cacheResponse = new Response(init);
         return cacheResponse;
         }
-      }
+      
       console.log(error);
     });
   }));
