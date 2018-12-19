@@ -28,7 +28,7 @@ self.addEventListener('fetch', function (event) {
     }
   }
   
-  // check for /fonts.googleapis.com/ "fake" domain if it takes to long to load abort
+  // check for /fonts.googleapis.com/ domain if it takes to long to load abort
   if (/fonts.googleapis.com/.test(event.request.url)) {
     return event.respondWith(
       Promise.race([
