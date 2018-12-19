@@ -3,7 +3,6 @@ importScripts('./js/idb-keyval.js');
 
 const cacheName = 'todoList';
 
-
 // Handle network delays
 function timeout(delay) {
   return new Promise(function (resolve, reject) {
@@ -28,10 +27,9 @@ self.addEventListener('fetch', function (event) {
       }));
     }
   }
-  // Exampel for Service Worker to the rescue. To avoid Single Point of Failure
-  // check for /abcd/ "fake" domain if it takes to long to load abort
-  // example file test-file-when-loading-takes-to-long-abort.css
-  if (/fonts.googleapi.com/.test(event.request.url)) {
+  
+  // check for /fonts.googleapis.com/ domain if it takes to long to load abort
+  if (/fonts.googleapis.com/.test(event.request.url)) {
     return event.respondWith(
       Promise.race([
         timeout(300),
@@ -63,14 +61,14 @@ self.addEventListener('fetch', function (event) {
       return response;
 
     }).catch(error => {
-    
-        // if a post put or delete is requested the cache ignores the request
-        if(event.request.method === 'POST' || event.request.method === 'PUT' || event.request.method === 'DELETE' ){
-        var init = { "status" : 200 , "statusText" : "Cache ignored the request and returned nothing!" };
+
+      // if a post put or delete is requested the cache ignores the request
+      if (event.request.method === 'POST' || event.request.method === 'PUT' || event.request.method === 'DELETE') {
+        var init = { "status": 200, "statusText": "Cache ignored the request and returned nothing!" };
         var cacheResponse = new Response(init);
         return cacheResponse;
-        }
-      
+      }
+
       console.log(error);
     });
   }));
@@ -91,16 +89,16 @@ self.addEventListener('sync', (event) => {
       let puts = [];
       let deletes = [];
 
-      for(let k of keys){
+      for (let k of keys) {
         if (/sendTask/.test(k)) {
           posts.push(k);
-        }else if(/updateTask/.test(k)){
+        } else if (/updateTask/.test(k)) {
           puts.push(k);
-        }else if((/deleteTask/.test(k))){
+        } else if ((/deleteTask/.test(k))) {
           deletes.push(k);
         }
       }
-      let sortedKeys = posts.concat( puts, deletes);
+      let sortedKeys = posts.concat(puts, deletes);
 
       for (let sortedKey of sortedKeys) {
         if (/sendTask/.test(sortedKey)) {
@@ -113,7 +111,7 @@ self.addEventListener('sync', (event) => {
               body: JSON.stringify(value)
             }).then((response) => {
               console.log("POST sync successful");
-            }).catch(err=>{
+            }).catch(err => {
               console.log("POST sync failed");
 
             });
@@ -134,7 +132,7 @@ self.addEventListener('sync', (event) => {
               body: JSON.stringify(updatedTask)
             }).then((response) => {
               console.log("PUT sync successful");
-            }).catch(err=>{
+            }).catch(err => {
               console.log("PUT sync failed");
 
             });
@@ -148,7 +146,7 @@ self.addEventListener('sync', (event) => {
             }).then((response) => {
               console.log("DELETE sync successful");
 
-            }).catch(err=>{
+            }).catch(err => {
               console.log("DELETE sync failed");
 
             });
@@ -159,4 +157,4 @@ self.addEventListener('sync', (event) => {
     });
 
   }
-  });
+});

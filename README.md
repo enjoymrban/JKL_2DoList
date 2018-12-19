@@ -8,7 +8,7 @@ A progressive Webapp (to-do-list), createt as part of the module mobile web appl
 ### Installing
 Clone --> npm install --> node server.js
 
-or to if you want to the server to restart after each change, install Nodemon first:
+or if you want the server to restart after each change, install Nodemon first:
 
 Clone --> npm install --> npm i nodemon -g --> nodemon run
 
