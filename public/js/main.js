@@ -1,6 +1,7 @@
 // variables
-let networkErrorHTML  = "<p><i id='errorIcon' class='material-icons notIcon'>error</i>Network error!</p>";
 let successHTML = "<p><i id='checkIcon' class='material-icons notIcon'>check_circle</i></i>Change queued!</p>";
+let networkErrorHTML  = "<p><i id='errorIcon' class='material-icons notIcon'>error</i>Network error!</p>";
+let taskTooShort = "<p><i id='errorIcon' class='material-icons notIcon'>error</i></i>Tasks need to have at least 3 caracters!</p>";
 
 
 
@@ -34,20 +35,20 @@ function notification(htmlContent) {
 
 }
 
+function offline() {
+    notification("<p>You are offline!</p>");
+    $('#offline').show();
+}
+
+function online() {
+    notification("<p>You are back online!</p>");
+    $('#offline').hide();
+}
+
 
 // after document load
 $(function () {
 
-
-    function offline() {
-        notification("<p>You are offline!</p>");
-        $('#offline').show();
-    }
-
-    function online() {
-        notification("<p>You are back online!</p>");
-        $('#offline').hide();
-    }
     window.addEventListener('online', online);
     window.addEventListener('offline', offline);
 
@@ -274,7 +275,11 @@ $('#createTaskF').submit(() => {
 
             } else {
                 console.log(errorThrown);
+                if(dataToSend.description.length <3){
+                notification(taskTooShort);
+                }else{
                 notification(networkErrorHTML);
+                }
             }
         }
     });
