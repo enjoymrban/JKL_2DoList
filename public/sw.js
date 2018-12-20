@@ -21,13 +21,13 @@ self.addEventListener('fetch', function (event) {
   // dont' load google fonts and icons if save-data header is on. In GET Request of the Localhost!
   if (event.request.headers.get('save-data')) {
     if (event.request.url.includes('fonts.googleapis.com')) {
-      event.respondWith(new Response('', {
+      return event.respondWith(new Response('', {
         status: 417,
         statusText: 'Ignore fonts to save data'
       }));
     }
   }
-  
+
   // check for /fonts.googleapis.com/ domain if it takes to long to load abort
   if (/fonts.googleapis.com/.test(event.request.url)) {
     return event.respondWith(
@@ -69,7 +69,7 @@ self.addEventListener('fetch', function (event) {
         return cacheResponse;
       }
 
-      console.log(error);
+      console.log("Request not in cache, therefore can't be loaded",error);
     });
   }));
 
