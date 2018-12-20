@@ -1,3 +1,9 @@
+// variables
+let networkErrorHTML  = "<p><i id='errorIcon' class='material-icons notIcon'>error</i>Network error!</p>";
+let successHTML = "<p><i id='checkIcon' class='material-icons notIcon'>check_circle</i></i>Change queued!</p>";
+
+
+
 // Helper functions
 function getNextId() {
     $.ajax({
@@ -29,6 +35,7 @@ function notification(htmlContent) {
 }
 
 
+// after document load
 $(function () {
 
 
@@ -188,11 +195,11 @@ function changeTaskIsDone(value, category) {
                     appendTask(value);
                 });
 
-                notification("<p><i id='checkIcon' class='material-icons notIcon'>check_circle</i></i>Change queued!</p>");
+                notification(successHTML);
 
             } else {
                 console.log(errorThrown);
-                notification("<p><i id='errorIcon' class='material-icons notIcon'>error</i>Network error!</p>");
+                notification(networkErrorHTML);
             }
         }
     });
@@ -216,10 +223,10 @@ function deleteTask(id) {
             if ('serviceWorker' in navigator && 'SyncManager' in window) {
                 idbKeyval.set(`deleteTask${id}`, id);
                 $('#taskDiv' + id).remove();
-                notification("<p><i id='checkIcon' class='material-icons notIcon'>check_circle</i></i>Change queued!</p>");
+                notification(successHTML);
             } else {
                 console.log(errorThrown);
-                notification("<p><i id='errorIcon' class='material-icons notIcon'>error</i>Network error!</p>");
+                notification(networkErrorHTML);
             }
         }
     });
@@ -263,11 +270,11 @@ $('#createTaskF').submit(() => {
                 dataToSendModified[`id`] = nextId;
 
                 appendTask(dataToSendModified);
-                notification("<p><i id='checkIcon' class='material-icons notIcon'>check_circle</i></i>Change queued!</p>");
+                notification(successHTML);
 
             } else {
                 console.log(errorThrown);
-                notification("<p><i id='errorIcon' class='material-icons notIcon'>error</i>Network error!</p>");
+                notification(networkErrorHTML);
             }
         }
     });
