@@ -12,6 +12,19 @@ or if you want the server to restart after each change, install Nodemon first:
 
 Clone --> npm install --> npm i nodemon -g --> nodemon run
 
+## Troubleshooting
+The app works offline as good as online; however, if the page is reloaded offline the service worker somehow doesn't react after sync events anymore --> reinstall service worker
+
+If the app doesn't work as you've expected follow these steps
+
+1) Clear your cache
+2) Clear your IndexDB
+3) Clear local storage
+
+if that doesn't help uninstall the service worker and refresh the page!
+
+
+
 ## Tested
 
 The App has been tested with Chrome!
