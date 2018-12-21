@@ -1,12 +1,18 @@
-let id = 0;
+let taskId = 0;
 
 class task {
     constructor(description, category) {
-        this.id = id;
+        this.id = taskId;
         this.description = description;
         this.category = category;
-        id++;
+        taskId++;
     }
+
+    setTaskIdTo0(){
+        taskId = 0;
+    }
+
+   
 }
 
 module.exports = task;

@@ -78,7 +78,9 @@ router.delete('/:id', (req, res) => {
 
     const index = tasks.indexOf(task);
     tasks.splice(index, 1);
-
+    if(tasks.length === 0){
+       task.setTaskIdTo0();
+     }
     res.send(task);
 });
 

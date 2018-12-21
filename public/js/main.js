@@ -7,7 +7,7 @@ let taskTooShort = "<p><i id='errorIcon' class='material-icons notIcon'>error</i
 
 // Helper functions
 function getNextId() {
-    $.ajax({
+        $.ajax({
         url: "api/tasks",
         type: "GET",
         dataType: "json"
@@ -48,7 +48,6 @@ function online() {
 
 // after document load
 $(function () {
-
     window.addEventListener('online', online);
     window.addEventListener('offline', offline);
 
@@ -217,7 +216,7 @@ function deleteTask(id) {
                 id
             } = data;
             $('#taskDiv' + id).remove();
-
+            
 
         },
         error: function (errorThrown) {
